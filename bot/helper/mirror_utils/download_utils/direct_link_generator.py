@@ -74,7 +74,8 @@ def direct_link_generator(link):
     elif any(x in domain for x in ['dood.watch', 'doodstream.com', 'dood.to', 'dood.so', 'dood.cx',
                                    'dood.la', 'dood.ws', 'dood.sh', 'doodstream.co', 'dood.pm',
                                    'dood.wf', 'dood.re', 'dood.video', 'dooood.com', 'dood.yt',
-                                   'doods.yt', 'dood.stream', 'doods.pro', 'ds2play.com']):
+                                   'doods.yt', 'dood.stream', 'doods.pro', 'ds2play.com', "dood.meme", 
+                                   "do0od.com", "d0000d.com", "d000d.com", "ds2video.com"]):
         return doods(link)
     elif any(x in domain for x in ['streamtape.com', 'streamtape.co', 'streamtape.cc', 'streamtape.to', 'streamtape.net',
                                    'streamta.pe', 'streamtape.xyz']):
