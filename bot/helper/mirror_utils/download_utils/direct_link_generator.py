@@ -1044,7 +1044,7 @@ def doods(url):
     if "/e/" in url:
         url = url.replace("/e/", "/d/")
     parsed_url = urlparse(url)
-    api_url = f"https://api.pake.tk/dood?url={url}"
+    api_url = f"https://api.pakai.eu.org/dood?url={url}"
     response = requests.get(api_url)
     if response.status_code != 200:
         raise DirectDownloadLinkException("ERROR: Failed to fetch direct link from API")
