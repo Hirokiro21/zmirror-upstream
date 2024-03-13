@@ -1,3 +1,5 @@
+import requests
+
 from base64 import b64decode
 from hashlib import sha256
 from http.cookiejar import MozillaCookieJar
@@ -79,7 +81,8 @@ def direct_link_generator(link):
     elif any(x in domain for x in ['dood.watch', 'doodstream.com', 'dood.to', 'dood.so', 'dood.cx',
                                    'dood.la', 'dood.ws', 'dood.sh', 'doodstream.co', 'dood.pm',
                                    'dood.wf', 'dood.re', 'dood.video', 'dooood.com', 'dood.yt',
-                                   'doods.yt', 'dood.stream', 'doods.pro', 'ds2play.com']):
+                                   'doods.yt', 'dood.stream', 'doods.pro', 'ds2play.com', "dood.meme", 
+                                  "do0od.com", "d0000d.com", "d000d.com", "ds2video.com"]):
         return doods(link)
     elif any(x in domain for x in ['streamtape.com', 'streamtape.co', 'streamtape.cc', 'streamtape.to', 'streamtape.net',
                                    'streamta.pe', 'streamtape.xyz']):
@@ -1078,23 +1081,15 @@ def doods(url):
     if "/e/" in url:
         url = url.replace("/e/", "/d/")
     parsed_url = urlparse(url)
-    with create_scraper() as session:
-        try:
-            html = HTML(session.get(url).text)
-        except Exception as e:
-            raise DirectDownloadLinkException(f'ERROR: {e.__class__.__name__} While fetching token link')
-        if not (link := html.xpath("//div[@class='download-content']//a/@href")):
-            raise DirectDownloadLinkException('ERROR: Token Link not found or maybe not allow to download! open in browser.')
-        link = f'{parsed_url.scheme}://{parsed_url.hostname}{link[0]}'
-        sleep(2)
-        try:
-            _res = session.get(link)
-        except Exception as e:
-            raise DirectDownloadLinkException(
-                f'ERROR: {e.__class__.__name__} While fetching download link')
-    if not (link := search(r"window\.open\('(\S+)'", _res.text)):
-        raise DirectDownloadLinkException("ERROR: Download link not found try again")
-    return (link.group(1), f'Referer: {parsed_url.scheme}://{parsed_url.hostname}/')
+    api_url = f"https://api.pakai.eu.org/dood?url={url}"
+    response = requests.get(api_url)
+    if response.status_code != 200:
+        raise DirectDownloadLinkException("ERROR: Failed to fetch direct link from API")
+    json_data = response.json()
+    if direct_link := json_data.get("data", {}).get("direct_link"):
+        return f"https://dd-cdn.pakai.eu.org/download?url={direct_link}"
+    else:
+        raise DirectDownloadLinkException("ERROR: Direct link not found in API response")
 
 def easyupload(url):
     if "::" in url:
